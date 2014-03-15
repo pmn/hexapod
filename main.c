@@ -1,14 +1,11 @@
 #include <Servo.h>
 
-void setpos(int pin, int pos){
-  // Set the position of servo at <pin> position.
-  Servo servo;
-  servo.attach(pin);
-  servo.write(pos);
-}
+Servo Shoulders[6];
+Servo Elbows[6];
 
-void init_position(){
-  /*  LEG            ELBOW PIN       SHOULDER PIN
+void register_servos() {
+    /* PIN LAYOUT
+      LEG            ELBOW PIN       SHOULDER PIN
       -------------------------------------------
       1              30              31
       2              32              33
@@ -17,38 +14,45 @@ void init_position(){
       5              10              11
       6              12              13
   */
-  // Arm set 1
-  for (int i=7; i<=13; i+=1) {
-    // Set Elbows
-    if (i%2==0){
-      // Even pins are always elbows
-      setpos(i, 55);
-    } else {
-      // odd pins are shoulders
-      setpos(i, 90);
-    }
-  }
 
-  // Arm set 2
-  for (int i=30; i<=36; i+=1) {
-    // Set Elbows
-    if (i%2==0){
-      // Even pins are always elbows
-      setpos(i, 55);
-    } else {
-      // odd pins are shoulders
-      setpos(i, 90);
-    }
-  }
+  Elbows[0].attach(30);
+  Shoulders[0].attach(31);
 
-  delay(15);
+  Elbows[1].attach(32);
+  Shoulders[1].attach(33);
+
+  Elbows[2].attach(34);
+  Shoulders[2].attach(35);
+
+  Elbows[3].attach(8);
+  Shoulders[3].attach(9);
+
+  Elbows[4].attach(10);
+  Shoulders[4].attach(11);
+
+  Elbows[5].attach(12);
+  Shoulders[5].attach(13);
 }
 
-void setup(){
-  // Called once at initialization.
+void init_position() {
+  // Elbows should be moved to position 55
+  // Shoulders should be moved to position 90
+
+  for (int i=0; i<=5; i+=1){
+    Shoulders[i].write(90);
+    delay(100);
+
+    Elbows[i].write(55);
+    delay(100);
+  }
+}
+
+void setup() {
+  // Put setup code here. This only runs once.
+  register_servos();
   init_position();
 }
 
-void loop(){
-  // This code runs repeatedly.
+void loop() {
+  // Put main code here; this loops continuously.
 }
