@@ -73,17 +73,25 @@ void leg_walk(int leg){
   // Sweep the specified leg in a forward walking motion.
   elbows[leg].write(10);
   shoulders[leg].write(shoulder_pos[leg][front]);
-  
+ 
   // Delay to let everything catch up
   delay(600); 
   
   // Leg is forward, lower the arm and move it backwards
   elbows[leg].write(70);
+  if (leg==1||leg==4){
+   elbows[leg-1].write(10); 
+   elbows[leg+1].write(10);
+  }
   delay(300);
   shoulders[leg].write(shoulder_pos[leg][rear]);
   delay(300);
   
   elbows[leg].write(60);
+  if (leg==1||leg==4){
+   elbows[leg-1].write(60); 
+   elbows[leg+1].write(60);
+  }
   // Set the leg neutral
   // leg_move_neutral(leg);
 }
