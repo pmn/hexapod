@@ -14,16 +14,26 @@ Servo elbows[6];
 
 int shoulder_pos[6][3];
 
-bool left; 
-bool right;
+int right_legs[3];
+int left_legs[3];
 
 const int front=0; 
 const int neutral=1;
 const int rear=2;
 
+const int up=10;
+const int down=70;
+
 void register_servos() {
   // Hook up all the legs to their appropriate pins and set movement ranges.
-
+  left_legs[0] = 0;
+  left_legs[1] = 1;
+  left_legs[2] = 2;
+  
+  right_legs[0] = 3;
+  right_legs[1] = 4;
+  right_legs[2] = 5;
+  
   elbows[0].attach(30);
   shoulders[0].attach(31);
   shoulder_pos[0][front] = 115;
@@ -69,32 +79,84 @@ void leg_move_neutral(int leg){
     delay(100);
 }
 
-void leg_walk(int leg){
-  // Sweep the specified leg in a forward walking motion.
-  elbows[leg].write(10);
-  shoulders[leg].write(shoulder_pos[leg][front]);
- 
-  // Delay to let everything catch up
-  delay(600); 
+void outer_walk(int legs[]){
+  // Walk the outer right legs. 
+  // Expects an int[3] array [front, mid, rear] leg positions
+  // Steps:
+  // 0. push down center leg
+  // 1. lift outer legs
+  // 2. sweep outer legs to forward position
+  // 3. push outer legs down
+  // 4. raise inner leg
+  // 5. sweep outer legs back
+  // 6. push center down
   
-  // Leg is forward, lower the arm and move it backwards
-  elbows[leg].write(70);
-  if (leg==1||leg==4){
-   elbows[leg-1].write(10); 
-   elbows[leg+1].write(10);
-  }
-  delay(300);
-  shoulders[leg].write(shoulder_pos[leg][rear]);
-  delay(300);
+  // Push down center leg
+  elbows[legs[1]].write(down);
   
-  elbows[leg].write(60);
-  if (leg==1||leg==4){
-   elbows[leg-1].write(60); 
-   elbows[leg+1].write(60);
-  }
-  // Set the leg neutral
-  // leg_move_neutral(leg);
+  // raise outer legs
+  elbows[legs[0]].write(up);
+  elbows[legs[2]].write(up);
+  delay(250);
+  
+  // sweep outer legs forward
+  shoulders[legs[0]].write(shoulder_pos[legs[0]][front]);
+  shoulders[legs[2]].write(shoulder_pos[legs[2]][front]);
+  delay(250);
+  
+  // outer legs down
+  elbows[legs[0]].write(down);
+  elbows[legs[2]].write(down);
+  delay(250);
+  
+  // center leg up
+  elbows[legs[1]].write(up);
+  delay(250);
+  
+  // sweep outer legs back
+  shoulders[legs[0]].write(shoulder_pos[legs[0]][rear]);
+  shoulders[legs[2]].write(shoulder_pos[legs[2]][rear]);
+  delay(250);
+  
+  // center leg down
+  elbows[legs[1]].write(down);
 }
+
+void inner_walk(int legs[]){
+  // Walk the inner right leg
+  // Expects an intp[3] array [front, mid, rear] leg positions
+  // Steps: 
+  // 0. Push down outer legs
+  // 1. raise center leg
+  // 2. sweep center forward
+  // 3. push center down
+  // 4. raise outer legs
+  // 5. sweep center to rear
+  // 6. lower outer legs
+  elbows[legs[1]].write(up);
+  shoulders[legs[1]].write(shoulder_pos[legs[1]][front]);
+  
+  // Delay to let everything catch up
+  delay(250);
+  
+  // Lower the arm
+  elbows[legs[1]].write(down);
+  
+  // Raise outer legs
+  elbows[legs[0]].write(up);
+  elbows[legs[2]].write(up);
+  delay(250);
+  
+  // Sweep leg back
+  shoulders[legs[1]].write(shoulder_pos[legs[1]][rear]);
+  delay(250);
+  
+  // Lower outer legs
+  elbows[legs[0]].write(down);
+  elbows[legs[2]].write(down);
+  delay(250);
+}
+
 
 void init_position() {
   // Elbows should be moved to position 55
@@ -107,22 +169,17 @@ void init_position() {
 
 void setup() {
   // Put setup code here. This only runs once.
-  right = true;
   register_servos();
   init_position();
 }
 
 void loop() {
   // Put main code here; this loops continuously.
-  // Try moving a leg forward
   
-  leg_walk(0);  
-  leg_walk(3);
+  inner_walk(left_legs);
+  outer_walk(right_legs);
   
-  leg_walk(1);
-  leg_walk(4);
-  
-  leg_walk(2);
-  leg_walk(5);
+  inner_walk(right_legs);
+  outer_walk(left_legs);
 }
 
