@@ -76,37 +76,37 @@ void move_legs_forward(int legs[]){
   for (int i=0; i<3; i+=1){
    shoulders[legs[i]].write(shoulder_pos[legs[i]][forward]);
   }
-  delay(250);
+  delay(75);
 }
 
 void move_legs_up(int legs[]){
   for (int i=0; i<3; i+=1){
    elbows[legs[i]].write(up); 
   }
-  delay(250);
+  delay(75);
 }
 
 void move_legs_down(int legs[]){
   for (int i=0; i<3; i+=1){
    elbows[legs[i]].write(down); 
   }
-  delay(250);
+  delay(75);
 }
 
 void move_legs_backward(int legs[]){
   for (int i=0; i<3; i+=1){
    shoulders[legs[i]].write(shoulder_pos[legs[i]][rear]);
   }
-  delay(250);
+  delay(75);
 }
 
 
 void leg_move_neutral(int leg){
     shoulders[leg].write(shoulder_pos[leg][neutral]);
-    delay(100);
+    delay(75);
     
     elbows[leg].write(down);
-    delay(100);
+    delay(75);
 }
 
 void move_legs_neutral(int legs[]){
@@ -130,20 +130,16 @@ void setup() {
 
 void loop() {
   // Put main code here; this loops continuously.
+  move_legs_up(odd_legs);
+  move_legs_forward(odd_legs);
+  move_legs_down(odd_legs);
   
-   move_legs_up(odd_legs);
-   move_legs_forward(odd_legs);
-   move_legs_down(odd_legs);
-   move_legs_up(even_legs);
-   move_legs_backward(odd_legs);
-   move_legs_forward(even_legs);
-   move_legs_down(even_legs);
-   move_legs_up(odd_legs);
-   move_legs_backward(even_legs);
-   move_legs_forward(odd_legs);
-   move_legs_up(even_legs);
-   move_legs_down(even_legs);
-   move_legs_backward(even_legs);
-   
+  move_legs_up(even_legs);
+  move_legs_backward(odd_legs);
+  move_legs_forward(even_legs);
+  
+  move_legs_down(even_legs);
+  move_legs_up(odd_legs);
+  move_legs_backward(even_legs);
 }
 
