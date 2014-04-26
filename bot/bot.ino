@@ -21,8 +21,11 @@ const int forward=0;
 const int neutral=1;
 const int rear=2;
 
-const int up=10;
+const int up=30;
 const int down=70;
+const int in=90;
+const int out=20;
+
 
 void register_servos() {
   // Hook up all the legs to their appropriate pins and set movement ranges.
@@ -100,6 +103,19 @@ void move_legs_backward(int legs[]){
   delay(75);
 }
 
+void move_legs_in(int legs[]){
+ for (int i=0; i<3; i+=1){
+   elbows[legs[i]].write(in);
+ } 
+ delay(200);
+}
+
+void move_legs_out(int legs[]){
+ for (int i=0; i<3; i+=1){
+  elbows[legs[i]].write(out);
+ }
+ delay(200); 
+}
 
 void leg_move_neutral(int leg){
     shoulders[leg].write(shoulder_pos[leg][neutral]);
@@ -113,6 +129,35 @@ void move_legs_neutral(int legs[]){
   for (int i=0; i<3; i+=1){ 
    leg_move_neutral(legs[i]);
   } 
+}
+
+// Walk forward
+void walk_forward() {
+  move_legs_up(odd_legs);
+  move_legs_forward(odd_legs);
+  move_legs_down(odd_legs);
+  
+  move_legs_up(even_legs);
+  move_legs_backward(odd_legs);
+  move_legs_forward(even_legs);
+  
+  move_legs_down(even_legs);
+  move_legs_up(odd_legs);
+  move_legs_backward(even_legs);
+}
+
+// Crab walk to the left
+void crab_left() {
+  move_legs_in(odd_legs);
+  move_legs_out(even_legs);
+  
+  move_legs_in(even_legs);
+  move_legs_out(odd_legs);
+}
+
+// Crab walk to the right
+void crab_right() {
+  
 }
 
 void init_position() {
@@ -130,16 +175,7 @@ void setup() {
 
 void loop() {
   // Put main code here; this loops continuously.
-  move_legs_up(odd_legs);
-  move_legs_forward(odd_legs);
-  move_legs_down(odd_legs);
-  
-  move_legs_up(even_legs);
-  move_legs_backward(odd_legs);
-  move_legs_forward(even_legs);
-  
-  move_legs_down(even_legs);
-  move_legs_up(odd_legs);
-  move_legs_backward(even_legs);
+  walk_forward();
+  //crab_left();
 }
 
