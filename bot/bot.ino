@@ -36,7 +36,6 @@ void register_servos() {
   odd_legs[0] = 1;
   odd_legs[1] = 3;
   odd_legs[2] = 5;
- 
   
   elbows[0].attach(30);
   shoulders[0].attach(31);
@@ -104,25 +103,25 @@ void move_legs_backward(int legs[]){
 }
 
 void move_legs_in(int legs[]){
- for (int i=0; i<3; i+=1){
-   elbows[legs[i]].write(in);
- } 
- delay(200);
+  for (int i=0; i<3; i+=1){
+    elbows[legs[i]].write(in);
+  } 
+  delay(200);
 }
 
 void move_legs_out(int legs[]){
- for (int i=0; i<3; i+=1){
-  elbows[legs[i]].write(out);
- }
- delay(200); 
+  for (int i=0; i<3; i+=1){
+    elbows[legs[i]].write(in);
+  }
+  delay(200); 
 }
 
 void leg_move_neutral(int leg){
-    shoulders[leg].write(shoulder_pos[leg][neutral]);
-    delay(75);
+  shoulders[leg].write(shoulder_pos[leg][neutral]);
+  delay(75);
     
-    elbows[leg].write(down);
-    delay(75);
+  elbows[leg].write(down);
+  delay(75);
 }
 
 void move_legs_neutral(int legs[]){
@@ -146,20 +145,6 @@ void walk_forward() {
   move_legs_backward(even_legs);
 }
 
-// Crab walk to the left
-void crab_left() {
-  move_legs_in(odd_legs);
-  move_legs_out(even_legs);
-  
-  move_legs_in(even_legs);
-  move_legs_out(odd_legs);
-}
-
-// Crab walk to the right
-void crab_right() {
-  
-}
-
 void init_position() {
   // Elbows should be moved to position 55
   // Shoulders should be moved to position 90
@@ -176,6 +161,5 @@ void setup() {
 void loop() {
   // Put main code here; this loops continuously.
   walk_forward();
-  //crab_left();
 }
 
